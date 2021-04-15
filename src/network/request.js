@@ -11,10 +11,9 @@ export function request(config) {
   //请求拦截
   instance.interceptors.request.use(
     (config) => {
-      //2.1 例如config中信息不符合服务器要求
-      //2.2 发送网络请求是希望在页面显示加载图标
-      //2.3某些网络请求,必须携带一些特殊信息(比如登陆的token)
-      //最后需要把结果重新返回
+      //console.log(config);
+      //为请求头对象添加 token 验证的 Authorization 字段
+      config.headers.Authorization = window.sessionStorage.getItem("token");
       return config;
     },
     (err) => {}
