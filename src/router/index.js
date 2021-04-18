@@ -8,6 +8,7 @@ const Welcome = () => import("views/home/childcomponents/Welcome");
 const Users = () => import("views/user/Users");
 const Rights = () => import("views/power/Rights");
 const Roles = () => import("views/power/Roles");
+const Cate = () => import("views/goods/Cate");
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,7 @@ const routes = [
       { path: "/users", component: Users }, //这里要加 /
       { path: "/rights", component: Rights },
       { path: "/roles", component: Roles },
+      { path: "/categories", component: Cate },
     ],
   },
 ];

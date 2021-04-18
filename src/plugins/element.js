@@ -28,6 +28,7 @@ import {
   Tree, //树形控件
   Select, //选择器
   Option, //选项
+  Cascader, //级联选择器
 } from "element-ui";
 
 Vue.use(Button);
@@ -56,6 +57,7 @@ Vue.use(Tag);
 Vue.use(Tree);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Cascader);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox.confirm;

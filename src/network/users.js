@@ -1,15 +1,7 @@
 import { request } from "network/request";
 
 //获取用户列表
-export function getUserList() {
-  return request({
-    url: "users",
-    params: { query: "", pagenum: 1, pagesize: 2 },
-  });
-}
-
-//获取用户列表
-export function getUserList1(params) {
+export function getUserList(params) {
   return request({
     url: "users",
     params: params,

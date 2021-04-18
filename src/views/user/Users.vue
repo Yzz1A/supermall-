@@ -206,7 +206,6 @@
 <script>
 import {
   getUserList,
-  getUserList1,
   changeUserStatus,
   addUser,
   getUserById,
@@ -280,71 +279,45 @@ export default {
     };
   },
   created() {
-    getUserList().then((res) => {
-      //console.log(res);
-      if (res.meta.status !== 200) {
-        return this.$message.error("获取用户列表失败");
-      }
-      this.userlist = res.data.users;
-      this.total = res.data.total;
-    });
+    this.getUsersList();
   },
   methods: {
-    //监听 pagesize 改变的事件
-    handleSizeChange(newSize) {
-      this.params.pagesize = newSize;
-      //console.log(this.params.pagesize);
-      //console.log(this.params);
-      //值改变之后重新请求渲染
-      getUserList1(this.params).then((res) => {
+    getUsersList() {
+      getUserList(this.params).then((res) => {
         if (res.meta.status !== 200) {
           return this.$message.error("获取用户列表失败");
         }
         this.userlist = res.data.users;
         this.total = res.data.total;
-
-        this.params.pagesize = 2;
       });
+    },
+    //监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.params.pagesize = newSize;
+      //值改变之后重新请求渲染
+      this.getUsersList();
     },
     //监听页码值改变的事件
     handleCurrentChange(newPage) {
       this.params.pagenum = newPage;
-      //console.log(this.params.newPage);
-      getUserList1(this.params).then((res) => {
-        if (res.meta.status !== 200) {
-          return this.$message.error("获取用户列表失败");
-        }
-        this.userlist = res.data.users;
-        this.total = res.data.total;
-
-        this.params.pagenum = 1;
-      });
+      this.getUsersList();
     },
     //监听搜索框改变的事件
     handleSearchChange(newQuery) {
       this.params.query = newQuery;
-      //console.log(this.params.newQuery);
-      getUserList1(this.params).then((res) => {
-        if (res.meta.status !== 200) {
-          return this.$message.error("获取用户列表失败");
-        }
-        this.userlist = res.data.users;
-        this.total = res.data.total;
-
-        this.params.query = "";
-      });
+      this.getUsersList();
     },
     //监听用户状态开关按钮 状态改变重新发起请求
     changeUserStatu(userInfo) {
-      this.url = `users/${userInfo.id}/state/${userInfo.mg_state}`;
-      //console.log(this.url);
-      changeUserStatus(this.url).then((res) => {
-        if (res.meta.status !== 200) {
-          userInfo.mg_state = !userInfo.mg_state;
-          this.$message.error("用户状态更新失败");
+      changeUserStatus(`users/${userInfo.id}/state/${userInfo.mg_state}`).then(
+        (res) => {
+          if (res.meta.status !== 200) {
+            userInfo.mg_state = !userInfo.mg_state;
+            this.$message.error("用户状态更新失败");
+          }
+          this.$message.success("用户状态更新成功");
         }
-        this.$message.success("用户状态更新成功");
-      });
+      );
     },
     //监听添加用户表单的关闭事件
     addDialogClose() {
@@ -355,30 +328,21 @@ export default {
       this.$refs.addFormRef.validate((valid) => {
         //console.log(valid);
         if (!valid) retuen; //valid为false则返回,否则请求添加
-        addUser(this.addForm)
-          .then((res) => {
-            if (res.meta.status !== 201) {
-              this.$message.error("添加用户失败");
-            }
-            this.$message.success("添加用户成功");
-            //隐藏添加用户的对话框
-            this.addDialogVisible = false;
-            //重新请求用户列表
-            return getUserList();
-          })
-          .then((res) => {
-            if (res.meta.status !== 200) {
-              return this.$message.error("获取用户列表失败");
-            }
-            this.userlist = res.data.users;
-            this.total = res.data.total;
-          });
+        addUser(this.addForm).then((res) => {
+          if (res.meta.status !== 201) {
+            this.$message.error("添加用户失败");
+          }
+          this.$message.success("添加用户成功");
+          //隐藏添加用户的对话框
+          this.addDialogVisible = false;
+          //重新请求用户列表
+          this.getUsersList();
+        });
       });
     },
     //监听编辑用户按钮的点击事件
     showEditVisible(id) {
-      this.url = "users/" + id;
-      getUserById(this.url).then((res) => {
+      getUserById("users/" + id).then((res) => {
         if (res.meta.status !== 200) {
           this.$message.error("查询用户信息失败");
         }
@@ -397,24 +361,16 @@ export default {
         submitEditUser("users/" + this.editForm.id, {
           email: this.editForm.email,
           mobile: this.editForm.mobile,
-        })
-          .then((res) => {
-            if (res.meta.status !== 200) {
-              this.$message.error("修改用户信息失败");
-            }
-            this.$message.success("修改用户信息成功");
-            //隐藏添加用户的对话框
-            this.editDialogVisible = false;
-            //重新请求用户列表
-            return getUserList1(this.params);
-          })
-          .then((res) => {
-            if (res.meta.status !== 200) {
-              return this.$message.error("获取用户列表失败");
-            }
-            this.userlist = res.data.users;
-            this.total = res.data.total;
-          });
+        }).then((res) => {
+          if (res.meta.status !== 200) {
+            this.$message.error("修改用户信息失败");
+          }
+          this.$message.success("修改用户信息成功");
+          //隐藏添加用户的对话框
+          this.editDialogVisible = false;
+          //重新请求用户列表
+          this.getUsersList();
+        });
       });
     },
     //根据id删除对应用户信息
@@ -446,14 +402,7 @@ export default {
             return this.$message.error("删除用户失败");
           }
           //重新请求用户列表
-          return getUserList1(this.params);
-        })
-        .then((res) => {
-          if (res.meta.status !== 200) {
-            return this.$message.error("获取用户列表失败");
-          }
-          this.userlist = res.data.users;
-          this.total = res.data.total;
+          this.getUsersList();
         });
     },
     //展示分配角色的对话框
@@ -475,25 +424,16 @@ export default {
       }
       allotRole(`users/${this.userInfo.id}/role`, {
         rid: this.selectRoleId,
-      })
-        .then((res) => {
-          if (res.meta.status !== 200) {
-            return this.$message.error("分配角色失败");
-          }
-          this.$message.success("分配角色成功");
-          //刷新用户列表
-          return getUserList();
-        })
-        .then((res) => {
-          if (res.meta.status !== 200) {
-            return this.$message.error("获取用户列表失败");
-          }
-          this.userlist = res.data.users;
-          this.total = res.data.total;
-
-          //隐藏分配角色对话框
-          this.setRoleDialogVisible = false;
-        });
+      }).then((res) => {
+        if (res.meta.status !== 200) {
+          return this.$message.error("分配角色失败");
+        }
+        this.$message.success("分配角色成功");
+        //刷新用户列表
+        this.getUsersList();
+        //隐藏分配角色对话框
+        this.setRoleDialogVisible = false;
+      });
     },
     //监听分配角色对话框的关闭事件
     setRoleDialogClosed() {

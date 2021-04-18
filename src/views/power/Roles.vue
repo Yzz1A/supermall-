@@ -124,6 +124,7 @@
         <el-button type="primary" @click="addRoles">确 定</el-button>
       </span>
     </el-dialog>
+
     <!-- 点击弹出编辑角色对话框 -->
     <el-dialog
       title="编辑角色信息"
@@ -146,6 +147,7 @@
         <el-button type="primary" @click="editRoles">确 定</el-button>
       </span>
     </el-dialog>
+
     <!-- 点击弹出分配权限的对话框 -->
     <el-dialog
       title="分配权限"
@@ -205,15 +207,17 @@ export default {
     };
   },
   created() {
-    getRoleList().then((res) => {
-      if (res.meta.status !== 200) {
-        return this.$message.error("获取角色列表失败");
-      }
-      this.roleList = res.data;
-      //console.log(this.roleList);
-    });
+    this.getRoleList1();
   },
   methods: {
+    getRoleList1() {
+      getRoleList().then((res) => {
+        if (res.meta.status !== 200) {
+          return this.$message.error("获取角色列表失败");
+        }
+        this.roleList = res.data;
+      });
+    },
     //监听编辑角色按钮的点击事件
     showEditVisible(id) {
       this.url = "roles/" + id;
@@ -222,7 +226,6 @@ export default {
           this.$message.error("查询角色信息失败");
         }
         this.editRole = res.data;
-        console.log(this.editRole);
       });
       this.editDialogVisible = true;
     },
@@ -233,23 +236,16 @@ export default {
         editSubmitRole("roles/" + this.editRole.roleId, {
           roleName: this.editRole.roleName,
           roleDesc: this.editRole.roleDesc,
-        })
-          .then((res) => {
-            if (res.meta.status !== 200) {
-              this.$message.error("修改用户信息失败");
-            }
-            this.$message.success("修改用户信息成功");
-            //隐藏添加用户的对话框
-            this.editDialogVisible = false;
-            //重新请求角色列表
-            return getRoleList();
-          })
-          .then((res) => {
-            if (res.meta.status !== 200) {
-              return this.$message.error("获取角色列表失败");
-            }
-            this.roleList = res.data;
-          });
+        }).then((res) => {
+          if (res.meta.status !== 200) {
+            this.$message.error("修改用户信息失败");
+          }
+          this.$message.success("修改用户信息成功");
+          //隐藏添加用户的对话框
+          this.editDialogVisible = false;
+          //重新请求角色列表
+          this.getRoleList1();
+        });
       });
     },
     //监听修改用户表单的关闭事件
@@ -285,13 +281,7 @@ export default {
             return this.$message.error("删除角色失败");
           }
           //重新请求角色列表
-          return getRoleList();
-        })
-        .then((res) => {
-          if (res.meta.status !== 200) {
-            return this.$message.error("获取角色列表失败");
-          }
-          this.roleList = res.data;
+          this.getRoleList1();
         });
     },
     //监听添加用户表单的关闭事件
@@ -302,24 +292,17 @@ export default {
     addRoles() {
       this.$refs.addFormRef.validate((valid) => {
         if (!valid) retuen; //valid为false则返回,否则请求添加
-        addRole(this.addForm)
-          .then((res) => {
-            //console.log(res);
-            if (res.meta.status !== 201) {
-              this.$message.error("添加用户失败");
-            }
-            this.$message.success("添加用户成功");
-            //隐藏添加用户的对话框
-            this.addDialogVisible = false;
-            //重新请求角色列表
-            return getRoleList();
-          })
-          .then((res) => {
-            if (res.meta.status !== 200) {
-              return this.$message.error("获取角色列表失败");
-            }
-            this.roleList = res.data;
-          });
+        addRole(this.addForm).then((res) => {
+          //console.log(res);
+          if (res.meta.status !== 201) {
+            this.$message.error("添加用户失败");
+          }
+          this.$message.success("添加用户成功");
+          //隐藏添加用户的对话框
+          this.addDialogVisible = false;
+          //重新请求角色列表
+          this.getRoleList1();
+        });
       });
     },
     //根据 id删除对应权限
@@ -396,24 +379,17 @@ export default {
       //分配权限
       setRights(`roles/${this.roleId}/rights`, {
         rids: idStr,
-      })
-        .then((res) => {
-          if (res.meta.status !== 200) {
-            return this.$message.error("分配权限失败");
-          }
-          this.$message.success("分配权限成功");
-          //重新请求角色列表
-          return getRoleList();
-        })
-        .then((res) => {
-          if (res.meta.status !== 200) {
-            return this.$message.error("获取角色列表失败");
-          }
-          this.roleList = res.data;
-
-          //隐藏对话框
-          this.setRightDialogVisible = false;
-        });
+      }).then((res) => {
+        if (res.meta.status !== 200) {
+          return this.$message.error("分配权限失败");
+        }
+        this.$message.success("分配权限成功");
+        //重新请求角色列表
+        this.getRoleList1();
+        this.roleList = res.data;
+        //隐藏对话框
+        this.setRightDialogVisible = false;
+      });
     },
   },
 };
