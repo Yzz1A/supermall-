@@ -5,7 +5,9 @@ const Login = () => import("components/Login");
 
 const Home = () => import("views/home/Home");
 const Welcome = () => import("views/home/childcomponents/Welcome");
-const Users = () => import("views/home/childcomponents/Users");
+const Users = () => import("views/user/Users");
+const Rights = () => import("views/power/Rights");
+const Roles = () => import("views/power/Roles");
 
 Vue.use(VueRouter);
 
@@ -19,6 +21,8 @@ const routes = [
       { path: "", redirect: "welcome" },
       { path: "welcome", component: Welcome },
       { path: "/users", component: Users }, //这里要加 /
+      { path: "/rights", component: Rights },
+      { path: "/roles", component: Roles },
     ],
   },
 ];

@@ -15,12 +15,23 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <!-- 搜索与添加   clear 在点击由 clearable 属性生成的清空按钮时触发-->
-          <el-input placeholder="请输入内容" v-model="params.query" clearable @clear="handleSearchChange">
-            <el-button slot="append" icon="el-icon-search" @click="handleSearchChange(params.query)"></el-button>
+          <el-input
+            placeholder="请输入内容"
+            v-model="params.query"
+            clearable
+            @clear="handleSearchChange"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="handleSearchChange(params.query)"
+            ></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="addDialogVisible = true">添加用户</el-button>
+          <el-button type="primary" @click="addDialogVisible = true"
+            >添加用户</el-button
+          >
         </el-col>
       </el-row>
       <!-- 用户列表  data数据绑定  border边框 stripe隔行变色  label当前列表项的标题  prop当前列表项的数据-->
@@ -36,38 +47,77 @@
           <template v-slot="scope">
             <!-- scope.row可以获取当前行所有数据  v-model绑定true/false表示开关 -->
             <!-- {{ scope.row }} -->
-            <el-switch v-model="scope.row.mg_state" @change="changeUserStatu(scope.row)">
+            <el-switch
+              v-model="scope.row.mg_state"
+              @change="changeUserStatu(scope.row)"
+            >
             </el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template v-slot="scope">
             <!-- 修改按钮 -->
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditVisible(scope.row.id)">
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="showEditVisible(scope.row.id)"
+            >
             </el-button>
             <!-- 删除按钮 -->
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)">
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              @click="removeUserById(scope.row.id)"
+            >
             </el-button>
             <!-- enterable鼠标是否可进入到 tooltip 中 -->
-            <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+            <el-tooltip
+              effect="dark"
+              content="分配角色"
+              placement="top"
+              :enterable="false"
+            >
               <!-- 分配角色按钮 -->
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button
+                type="warning"
+                icon="el-icon-setting"
+                size="mini"
+                @click="setRole(scope.row)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 底部分页 -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="params.pagenum" :page-sizes="[1, 2, 5, 10]" :page-size="params.pagesize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="params.pagenum"
+        :page-sizes="[1, 2, 5, 10]"
+        :page-size="params.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      >
       </el-pagination>
     </el-card>
 
     <!-- 点击添加用户弹出对话框  visible.sync控制显示与隐藏-->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClose">
+    <el-dialog
+      title="添加用户"
+      :visible.sync="addDialogVisible"
+      width="50%"
+      @close="addDialogClose"
+    >
       <!-- 内容区域 -->
-      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
+      <el-form
+        :model="addForm"
+        :rules="addFormRules"
+        ref="addFormRef"
+        label-width="70px"
+      >
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addForm.username"></el-input>
         </el-form-item>
@@ -87,10 +137,21 @@
         <el-button type="primary" @click="addUser">确 定</el-button>
       </span>
     </el-dialog>
+
     <!-- 点击弹出编辑用户对话框 -->
-    <el-dialog title="添加用户" :visible.sync="editDialogVisible" width="50%" @close="editDialogClose">
+    <el-dialog
+      title="添加用户"
+      :visible.sync="editDialogVisible"
+      width="50%"
+      @close="editDialogClose"
+    >
       <!-- 内容区域 -->
-      <el-form :model="editForm" :rules="addFormRules" ref="editFormRef" label-width="70px">
+      <el-form
+        :model="editForm"
+        :rules="addFormRules"
+        ref="editFormRef"
+        label-width="70px"
+      >
         <el-form-item label="用户名">
           <el-input v-model="editForm.username" disabled></el-input>
         </el-form-item>
@@ -104,7 +165,39 @@
       <!-- 底部按钮区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUser">确 定</el-button>
+        <el-button type="primary" @click="getUserById">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 点击弹出分配角色对话框 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="setRoleDialogVisible"
+      width="50%"
+      @close="setRoleDialogClosed"
+    >
+      <!-- 内容区域 -->
+      <div>
+        <p>当前的用户 : {{ userInfo.username }}</p>
+        <p>当前的角色 : {{ userInfo.role_name }}</p>
+        <p>
+          分配新角色 :
+          <!-- :label显示的文本  :value真正选中的值-->
+          <el-select v-model="selectRoleId" placeholder="请选择">
+            <el-option
+              v-for="item in rolesList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <!-- 底部按钮区域 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -116,10 +209,12 @@ import {
   getUserList1,
   changeUserStatus,
   addUser,
-  editUser,
+  getUserById,
   submitEditUser,
   deleteUserById,
-} from "network/home";
+  allotRole,
+} from "network/users";
+import { getRoleList } from "network/roles";
 
 export default {
   name: "Users",
@@ -178,6 +273,10 @@ export default {
       },
       editDialogVisible: false, //控制修改用户对话框的隐藏与显示
       editForm: {}, //修改用户
+      setRoleDialogVisible: false, //控制分配角色对话框的隐藏与显示
+      userInfo: {}, //将要被分配角色的用户信息
+      rolesList: [], //所有角色的数据列表
+      selectRoleId: "", //选中的角色 id 值
     };
   },
   created() {
@@ -258,7 +357,6 @@ export default {
         if (!valid) retuen; //valid为false则返回,否则请求添加
         addUser(this.addForm)
           .then((res) => {
-            //console.log(res);
             if (res.meta.status !== 201) {
               this.$message.error("添加用户失败");
             }
@@ -269,7 +367,6 @@ export default {
             return getUserList();
           })
           .then((res) => {
-            //console.log(res);
             if (res.meta.status !== 200) {
               return this.$message.error("获取用户列表失败");
             }
@@ -281,7 +378,7 @@ export default {
     //监听编辑用户按钮的点击事件
     showEditVisible(id) {
       this.url = "users/" + id;
-      editUser(this.url).then((res) => {
+      getUserById(this.url).then((res) => {
         if (res.meta.status !== 200) {
           this.$message.error("查询用户信息失败");
         }
@@ -294,7 +391,7 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     //修改用户信息并提交
-    editUser() {
+    getUserById() {
       this.$refs.editFormRef.validate((valid) => {
         if (!valid) retuen;
         submitEditUser("users/" + this.editForm.id, {
@@ -358,6 +455,50 @@ export default {
           this.userlist = res.data.users;
           this.total = res.data.total;
         });
+    },
+    //展示分配角色的对话框
+    setRole(userInfo) {
+      this.userInfo = userInfo;
+      //在展示对话框之前,获取所有角色列表
+      getRoleList().then((res) => {
+        if (res.meta.status !== 200) {
+          return this.$message.error("获取角色列表失败");
+        }
+        this.rolesList = res.data;
+      });
+      this.setRoleDialogVisible = true;
+    },
+    //监控分配角色对话框确定按钮的点击事件
+    saveRoleInfo() {
+      if (!this.selectRoleId) {
+        return this.$message.error("请选择要分配的角色");
+      }
+      allotRole(`users/${this.userInfo.id}/role`, {
+        rid: this.selectRoleId,
+      })
+        .then((res) => {
+          if (res.meta.status !== 200) {
+            return this.$message.error("分配角色失败");
+          }
+          this.$message.success("分配角色成功");
+          //刷新用户列表
+          return getUserList();
+        })
+        .then((res) => {
+          if (res.meta.status !== 200) {
+            return this.$message.error("获取用户列表失败");
+          }
+          this.userlist = res.data.users;
+          this.total = res.data.total;
+
+          //隐藏分配角色对话框
+          this.setRoleDialogVisible = false;
+        });
+    },
+    //监听分配角色对话框的关闭事件
+    setRoleDialogClosed() {
+      this.selectRoleId = "";
+      this.userInfo = {};
     },
   },
 };

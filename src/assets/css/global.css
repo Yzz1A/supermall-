@@ -6,6 +6,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  min-width: 1080px; /* 最小宽度 */
 }
 
 .el-breadcrumb {

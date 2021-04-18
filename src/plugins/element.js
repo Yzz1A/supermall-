@@ -24,6 +24,10 @@ import {
   Pagination, //分页
   Dialog, //对话框
   MessageBox, //弹框
+  Tag, //标签
+  Tree, //树形控件
+  Select, //选择器
+  Option, //选项
 } from "element-ui";
 
 Vue.use(Button);
@@ -48,6 +52,10 @@ Vue.use(Switch);
 Vue.use(Tooltip);
 Vue.use(Pagination);
 Vue.use(Dialog);
+Vue.use(Tag);
+Vue.use(Tree);
+Vue.use(Select);
+Vue.use(Option);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox.confirm;
