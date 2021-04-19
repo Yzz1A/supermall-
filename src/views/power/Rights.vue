@@ -25,26 +25,25 @@
 </template>
 
 <script>
-import { getRightsList } from "network/rights";
+import { getRightsList } from 'network/rights'
 
 export default {
-  name: "Rights",
+  name: 'Rights',
   data() {
     return {
       //权限列表
       rightsList: [],
-    };
+    }
   },
   created() {
     getRightsList().then((res) => {
       if (res.meta.status !== 200) {
-        return this.$message.error("获取权限列表失败");
+        return this.$message.error('获取权限列表失败')
       }
-      this.rightsList = res.data;
-    });
+      this.rightsList = res.data
+    })
   },
-};
+}
 </script>
 
-<style>
-</style>
+<style></style>

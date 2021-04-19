@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from 'vue'
 import {
   Button, //按钮
   Form, //表单
@@ -29,35 +29,41 @@ import {
   Select, //选择器
   Option, //选项
   Cascader, //级联选择器
-} from "element-ui";
+  Alert, //警告框
+  Tabs, //页签
+  TabPane, //页签
+} from 'element-ui'
 
-Vue.use(Button);
-Vue.use(Form);
-Vue.use(FormItem);
-Vue.use(Input);
-Vue.use(Container);
-Vue.use(Header);
-Vue.use(Aside);
-Vue.use(Main);
-Vue.use(Menu);
-Vue.use(Submenu);
-Vue.use(MenuItem);
-Vue.use(Breadcrumb);
-Vue.use(BreadcrumbItem);
-Vue.use(Card);
-Vue.use(Row);
-Vue.use(Col);
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Switch);
-Vue.use(Tooltip);
-Vue.use(Pagination);
-Vue.use(Dialog);
-Vue.use(Tag);
-Vue.use(Tree);
-Vue.use(Select);
-Vue.use(Option);
-Vue.use(Cascader);
+Vue.use(Button)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Input)
+Vue.use(Container)
+Vue.use(Header)
+Vue.use(Aside)
+Vue.use(Main)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Switch)
+Vue.use(Tooltip)
+Vue.use(Pagination)
+Vue.use(Dialog)
+Vue.use(Tag)
+Vue.use(Tree)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Cascader)
+Vue.use(Alert)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
-Vue.prototype.$message = Message;
-Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm

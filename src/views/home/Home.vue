@@ -17,8 +17,7 @@
               router 是否开启路由模式
               default-active 当前激活菜单的 index   $route.path这里暂时不用
          -->
-        <el-menu background-color="#333744" text-color="#fff" active-text-color="#409eff" unique-opened
-          :collapse="isToggle" :collapse-transition="false" router :default-active="activePath">
+        <el-menu background-color="#333744" text-color="#fff" active-text-color="#409eff" unique-opened :collapse="isToggle" :collapse-transition="false" router :default-active="activePath">
           <!-- 一级菜单 index值不能相同-->
           <el-submenu v-for="item in menuList" :key="item.id" :index="item.id + ''">
             <!-- 一级菜单模版 -->
@@ -29,8 +28,7 @@
               <span>{{ item.authName }}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item v-for="subItem in item.children" :key="subItem.id" :index="'/' + subItem.path"
-              @click="saveNavState('/' + subItem.path)">
+            <el-menu-item v-for="subItem in item.children" :key="subItem.id" :index="'/' + subItem.path" @click="saveNavState('/' + subItem.path)">
               <!-- 二级菜单模版 -->
               <template slot="title">
                 <!-- 图标 -->
@@ -51,53 +49,53 @@
 </template>
 
 <script>
-import { getMenuList } from "network/home";
+import { getMenuList } from 'network/home'
 
 export default {
-  name: "Home",
+  name: 'Home',
   data() {
     return {
       //左侧菜单数据
       menuList: [],
       icons: {
-        125: "el-icon-user-solid",
-        103: "el-icon-s-grid",
-        101: "el-icon-goods",
-        102: "el-icon-s-order",
-        145: "el-icon-s-data",
+        125: 'el-icon-user-solid',
+        103: 'el-icon-s-grid',
+        101: 'el-icon-goods',
+        102: 'el-icon-s-order',
+        145: 'el-icon-s-data',
       },
       //是否折叠
       isToggle: false,
       //被激活的链接地址
-      activePath: "",
-    };
+      activePath: '',
+    }
   },
   methods: {
     //点击退出登陆
     logout() {
-      window.sessionStorage.removeItem("token"); //清除 token
-      this.$router.push("/login"); //重新跳转
+      window.sessionStorage.removeItem('token') //清除 token
+      this.$router.push('/login') //重新跳转
     },
     //点击切换菜单折叠与展开
     toggleClick() {
-      this.isToggle = !this.isToggle;
+      this.isToggle = !this.isToggle
     },
     //保存链接的激活状态
     saveNavState(activePath) {
-      window.sessionStorage.setItem("activePath", activePath);
-      this.activePath = activePath;
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     },
   },
   created() {
     //获取菜单列表
     getMenuList().then((res) => {
-      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
-      this.menuList = res.data;
-    });
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.menuList = res.data
+    })
     //取出存储的激活状态赋值给 activePath
-    this.activePath = window.sessionStorage.getItem("activePath");
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
