@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Login = () => import('components/Login')
-
+/* const Login = () => import('components/Login')
 const Home = () => import('views/home/Home')
 const Welcome = () => import('views/home/childcomponents/Welcome')
 const Users = () => import('views/user/Users')
@@ -13,7 +12,20 @@ const Params = () => import('views/goods/Params')
 const GoodsList = () => import('views/goods/GoodsList')
 const GoodsAdd = () => import('views/goods/GoodsAdd')
 const Order = () => import('views/order/Order')
-const Report = () => import('views/report/Report')
+const Report = () => import('views/report/Report') */
+
+const Login = () => import(/* webpackChunkName: "Login_Home_Welcome" */ 'components/Login')
+const Home = () => import(/* webpackChunkName: "Login_Home_Welcome" */ 'views/home/Home')
+const Welcome = () => import(/* webpackChunkName: "Login_Home_Welcome" */ 'views/home/childcomponents/Welcome')
+const Users = () => import(/* webpackChunkName: "Users_Rights_Roles" */ 'views/user/Users')
+const Rights = () => import(/* webpackChunkName: "Users_Rights_Roles" */ 'views/power/Rights')
+const Roles = () => import(/* webpackChunkName: "Users_Rights_Roles" */ 'views/power/Roles')
+const Cate = () => import(/* webpackChunkName: "Cate_Params" */ 'views/goods/Cate')
+const Params = () => import(/* webpackChunkName: "Cate_Params" */ 'views/goods/Params')
+const GoodsList = () => import(/* webpackChunkName: "GoodsList_GoodsAdd" */ 'views/goods/GoodsList')
+const GoodsAdd = () => import(/* webpackChunkName: "GoodsList_GoodsAdd" */ 'views/goods/GoodsAdd')
+const Order = () => import(/* webpackChunkName: "Order_Report" */ 'views/order/Order')
+const Report = () => import(/* webpackChunkName: "Order_Report" */ 'views/report/Report')
 
 Vue.use(VueRouter)
 
